@@ -14,15 +14,35 @@ describe("Delete Question", () => {
   });
 
   it("should be able to delete question", async () => {
-    const newQuestion = makeQuestion({}, new UniqueEntitiesID('question-1') )
+    const newQuestion = makeQuestion({
+      authorId: new UniqueEntitiesID('author-1')
+    }, new UniqueEntitiesID('question-1') )
 
     await questionRepositories.create(newQuestion)
 
     await sut.create({
+      authorId: 'author-1',
       questionId: 'question-1',
     });
 
     expect(questionRepositories.items).toHaveLength(0);
+    
+  });
+
+  it("should not be able to delete question from another user", async () => {
+    const newQuestion = makeQuestion({
+      authorId: new UniqueEntitiesID('author-1')
+    }, new UniqueEntitiesID('question-1') )
+
+    await questionRepositories.create(newQuestion)
+
+    await expect(() => 
+      sut.create({
+        authorId: 'author-2',
+        questionId: 'question-1',
+      })
+    ).rejects.toBeInstanceOf(Error);
+
     
   });
 });
