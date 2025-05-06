@@ -1,5 +1,5 @@
 
-# 🧠 forum_in_DDD
+# 🧠 Forum com DDD, Clean-Architecture e SOLID
 
 Um projeto de fórum desenvolvido com foco em Domain-Driven Design (DDD), utilizando Node.js, TypeScript e princípios de Clean Code e SOLID.
 
