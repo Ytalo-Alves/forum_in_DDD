@@ -2,8 +2,14 @@ import { QuestionRepositories } from "@/domain/forum/application/repositories/qu
 import { Question } from "@/domain/forum/enterprise/entities/question";
 
 export class InMemoryQuestionRepositories implements QuestionRepositories {
-  
+ 
   public items: Question[] = [];
+
+  async save(question: Question) {
+    const questionIndex = this.items.findIndex(item => item.id === question.id)
+    this.items[questionIndex] = question
+  
+  }
 
   async findById(id: string){
     const question = this.items.find(item => item.id.toString() === id)
