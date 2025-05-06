@@ -1,3 +1,4 @@
+import type { PageParams } from "@/core/repositories/page-params";
 import { Question } from "../../enterprise/entities/question";
 
 export interface QuestionRepositories {
@@ -6,4 +7,5 @@ export interface QuestionRepositories {
   findBySlug(slug: string): Promise<Question | null>
   delete(question: Question): Promise<void>
   save(question: Question): Promise<void>
+  findManyRecent(params: PageParams): Promise<Question[]>
 }
