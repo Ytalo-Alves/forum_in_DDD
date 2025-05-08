@@ -20,7 +20,7 @@ describe("Fetch Recente Question", () => {
     );
     await questionRepositories.create(
       makeQuestion({ createdAt: new Date(2025, 0, 23) })
-    );
+    );    
 
     const { questions } = await sut.create({
       page: 1,
