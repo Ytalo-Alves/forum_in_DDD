@@ -1,9 +1,17 @@
+import type { PageParams } from "@/core/repositories/page-params";
 import { AnswerRepositories } from "@/domain/forum/application/repositories/answer-repositories";
 import { Answer } from "@/domain/forum/enterprise/entities/answer";
 
 export class InMemoryAnswerRepositories implements AnswerRepositories {
- 
+  
   public items: Answer[] = []
+
+  async findManyByQuestionId(questionId: string, {page}: PageParams) {
+    const answers = this.items.filter(item => item.questionId.toString() === questionId)
+    .slice((page - 1) * 20, page * 20 )
+
+    return answers
+  }
 
   async save(answer: Answer) {
     const answerIndex = this.items.findIndex(item => item.id === answer.id)
