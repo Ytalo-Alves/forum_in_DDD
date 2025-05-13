@@ -1,3 +1,4 @@
+import type { PageParams } from "@/core/repositories/page-params";
 import type { AnswerCommentRepositories } from "@/domain/forum/application/repositories/answer-comment-repositories";
 import type { AnswerComment } from "@/domain/forum/enterprise/entities/answer-comment";
 
@@ -5,6 +6,15 @@ export class InMemoryAnswerCommentRepositories implements AnswerCommentRepositor
   
   public itens : AnswerComment[] = []
 
+  async findManyByAnswerId(answerId: string, {page}: PageParams) {
+    const answerComment = await this.itens
+    .filter((item) => item.answerId.toString() === answerId)
+    .slice((page - 1) * 20, page * 20)
+    
+
+    return answerComment
+  }
+  
   async findById(id: string) {
     const answerComment = this.itens.find((item) => item.id.toString() === id)
 
