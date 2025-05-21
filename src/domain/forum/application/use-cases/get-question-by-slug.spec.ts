@@ -15,17 +15,19 @@ describe("Get Question by slug", () => {
 
   it("should be able to get a question by slug", async () => {
     const newQuestion = makeQuestion({
-      slug: Slug.create("o-que-e-o-typescript"),
+      slug: Slug.create('example-question'),
     })
 
     await questionRepositories.create(newQuestion)
 
-    const { question } = await sut.create({
-      slug: "o-que-e-o-typescript",
-    });
+    const result = await sut.execute({
+      slug: 'example-question',
+    })
 
-    expect(question.id).toBeTruthy();
-    expect(question.title).toEqual(newQuestion.title);
-    
+    expect(result.value).toMatchObject({
+      question: expect.objectContaining({
+        title: newQuestion.title,
+      }),
+    })
   });
 });

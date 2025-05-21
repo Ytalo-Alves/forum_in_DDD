@@ -17,12 +17,12 @@ describe('Fetch Question Comment', () => {
     await fetchQuestionCommentRepositories.create(makeQuestionComment({questionId: new UniqueEntitiesID('question-1')}))
     await fetchQuestionCommentRepositories.create(makeQuestionComment({questionId: new UniqueEntitiesID('question-1')}))
 
-    const {questionComment} = await sut.execute({
+    const result = await sut.execute({
       questionId: 'question-1',
       page: 1
     })
 
-    expect(questionComment).toHaveLength(3)
+    expect(result.value?.questionComments).toHaveLength(3)
 
   })
 
@@ -30,12 +30,12 @@ describe('Fetch Question Comment', () => {
     for(let i = 1; i <= 22; i++) {
       await fetchQuestionCommentRepositories.create(makeQuestionComment({questionId: new UniqueEntitiesID('question-1')}))
     }
-      const {questionComment} = await sut.execute({
+      const result = await sut.execute({
         questionId: 'question-1',
         page: 2
       })
     
 
-    expect(questionComment).toHaveLength(2)
+    expect(result.value?.questionComments).toHaveLength(2)
   })
 })

@@ -3,6 +3,7 @@ import { makeQuestion } from "test/factories/make-question";
 import { DeleteQuestionUseCase } from "./delete-question";
 import { UniqueEntitiesID } from "@/core/entities/unique-entities-id";
 import { EditQuestionUseCase } from "./edit-question";
+import { NotAllowedError } from "./errors/not-allowed-error";
 
 let questionRepositories: InMemoryQuestionRepositories;
 let sut: EditQuestionUseCase;
@@ -42,15 +43,14 @@ describe("Edit Question", () => {
 
     await questionRepositories.create(newQuestion)
 
-    await expect(() => 
-      sut.create({
+   const result = await sut.create({
         authorId: 'author-2',
-        questionId: 'question-1',
+        questionId: newQuestion.id.toValue(),
         title: 'New Question',
         content: 'New Question',
       })
-    ).rejects.toBeInstanceOf(Error);
-
-    
+      expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(NotAllowedError)
+      
   });
 });

@@ -13,13 +13,14 @@ describe("Create Question", () => {
   });
 
   it("should be able to create a question", async () => {
-    const { question } = await sut.create({
+    const result = await sut.execute({
       authorId: "1",
       title: "O que é o TypeScript?",
       content:
         "TypeScript é um superconjunto tipado de JavaScript que compila para JavaScript puro.",
     });
-    expect(question.id).toBeTruthy();
-    expect(questionRepositories.items[0].id).toEqual(question.id);
+    
+    expect(result.isRight()).toBe(true)
+    expect(questionRepositories.items[0]).toEqual(result.value?.question);
   });
 });

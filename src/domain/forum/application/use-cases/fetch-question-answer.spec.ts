@@ -18,12 +18,12 @@ describe("Fetch Question Answer", () => {
     await answerRepositories.create(makeAnswer({questionId: new UniqueEntitiesID('question-1')}));
     await answerRepositories.create(makeAnswer({questionId: new UniqueEntitiesID('question-1')}));    
 
-    const { answers } = await sut.create({
+    const result = await sut.create({
       questionId: 'question-1',
       page: 1
     });
 
-    expect(answers).toHaveLength(3)
+    expect(result.value?.answers).toHaveLength(3)
   });
 
   it("should be able to fetch paginated questions answers", async () => {
@@ -31,11 +31,11 @@ describe("Fetch Question Answer", () => {
       await answerRepositories.create(makeAnswer({questionId: new UniqueEntitiesID('question-1')}));
     }
 
-    const { answers } = await sut.create({
+    const result = await sut.create({
       questionId: 'question-1',
       page: 2,
     });
 
-    expect(answers).toHaveLength(2);
+    expect(result.value?.answers).toHaveLength(2);
   });
 });
