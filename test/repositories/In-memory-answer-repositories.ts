@@ -1,10 +1,15 @@
 import type { PageParams } from "@/core/repositories/page-params";
 import { AnswerRepositories } from "@/domain/forum/application/repositories/answer-repositories";
 import { Answer } from "@/domain/forum/enterprise/entities/answer";
+import { AnswerAttachmentsRepository } from "@/domain/forum/application/repositories/answer-attachment-repositories";
+
+
 
 export class InMemoryAnswerRepositories implements AnswerRepositories {
   
   public items: Answer[] = []
+
+  constructor(private answerAttachmentsRepository: AnswerAttachmentsRepository) {}
 
   async findManyByQuestionId(questionId: string, {page}: PageParams) {
     const answers = this.items.filter(item => item.questionId.toString() === questionId)
@@ -35,9 +40,8 @@ export class InMemoryAnswerRepositories implements AnswerRepositories {
   async delete(answer: Answer) {
     const answerIndex = this.items.findIndex(item => item.id === answer.id)
 
-    if(answerIndex >= 0) {
-      this.items.splice(answerIndex, 1)
-    }
+    this.items.splice(answerIndex, 1)
+    this.answerAttachmentsRepository.deleteManyByAnswerId(answer.id.toString())
   }
 
 }

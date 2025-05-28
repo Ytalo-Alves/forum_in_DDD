@@ -3,14 +3,18 @@ import { DeleteAnswerUseCase } from "./delete-answer";
 import { InMemoryAnswerRepositories } from "test/repositories/In-memory-answer-repositories";
 import { makeAnswer } from "test/factories/make-answer";
 import { NotAllowedError } from "./errors/not-allowed-error";
+import { InMemoryAnswerAttachmentsRepository } from "test/repositories/In-memory-answer-attachment-repositories";
+import { makeAnswerAttachment } from "test/factories/make-answer-attachment";
 
 let answerRepositories: InMemoryAnswerRepositories;
+let answerAttachmentsRepository: InMemoryAnswerAttachmentsRepository;
 let sut: DeleteAnswerUseCase;
 
 describe("Delete Answer", () => {
 
   beforeEach(() => {
-    answerRepositories = new InMemoryAnswerRepositories();
+    answerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository();
+    answerRepositories = new InMemoryAnswerRepositories(answerAttachmentsRepository);
     sut = new DeleteAnswerUseCase(answerRepositories);
   });
 
@@ -37,13 +41,24 @@ describe("Delete Answer", () => {
 
     await answerRepositories.create(newAnswer)
 
+    answerAttachmentsRepository.items.push(
+      makeAnswerAttachment({
+        answerId: newAnswer.id,
+        attachmentId: new UniqueEntitiesID('1'),
+      }),
+      makeAnswerAttachment({
+        answerId: newAnswer.id,
+        attachmentId: new UniqueEntitiesID('2'),
+      })
+    )
+
     const result = await sut.create({
-        authorId: 'author-2',
-        answerId: 'answer-1',
+      answerId: 'answer-1',
+      authorId: 'author-1',
   })
 
-  expect(result.isLeft()).toBe(true)
-  expect(result.value).toBeInstanceOf(NotAllowedError)
+  expect(answerRepositories.items).toHaveLength(0)
+  expect(answerAttachmentsRepository.items).toHaveLength(0)
 
     
   });

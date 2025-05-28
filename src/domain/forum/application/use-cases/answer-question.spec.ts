@@ -1,13 +1,17 @@
 import { randomUUID } from "node:crypto";
 import { AnswerQuestionUseCase } from "./answer-question";
 import { InMemoryAnswerRepositories } from "test/repositories/In-memory-answer-repositories";
+import { InMemoryAnswerAttachmentsRepository } from "test/repositories/In-memory-answer-attachment-repositories";
+
 
 let answerQuestion: InMemoryAnswerRepositories;
+let answerAttachmentsRepository: InMemoryAnswerAttachmentsRepository;
 let sut: AnswerQuestionUseCase;
 
 describe("Answer Question", () => {
   beforeEach(() => {
-    answerQuestion = new InMemoryAnswerRepositories();
+    answerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository();
+    answerQuestion = new InMemoryAnswerRepositories(answerAttachmentsRepository);
     sut = new AnswerQuestionUseCase(answerQuestion);
   });
 
@@ -16,6 +20,7 @@ describe("Answer Question", () => {
       questionId: randomUUID(),
       instructorId: randomUUID(),
       content: "Nova resposta",
+      attachmentsIds: ['1', '2'],
     });
 
     expect(result.isRight()).toBe(true)
